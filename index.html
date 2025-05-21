@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Opening AI Daily Dose...</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        text-align: center;
+        padding: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <p id="status">Checking your device...</p>
+
+    <script>
+      function isMobile() {
+        return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      }
+
+      async function handleInviteFlow() {
+        const statusEl = document.getElementById("status");
+
+        if (!isMobile()) {
+          statusEl.innerHTML = `
+            <strong>Almost there!</strong><br /><br />
+            Please open this invite link from your phone or tablet to launch the AI Daily Dose app.
+          `;
+          return;
+        }
+
+        const fingerprint = crypto.randomUUID();
+        localStorage.setItem("aidailydose_fingerprint", fingerprint);
+
+        // Save to Supabase
+        try {
+          await fetch(
+            "https://jdowwnetdnnhwgqteaak.supabase.co/rest/v1/deferred_invites",
+            {
+              method: "POST",
+              headers: {
+                apikey:
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impkb3d3bmV0ZG5uaHdncXRlYWFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MDgxODAsImV4cCI6MjA1OTM4NDE4MH0.6REF6OnSmfL26hSn3zkEPXFSKGQkFqI7vsuM7YW2UKc",
+                Authorization:
+                  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impkb3d3bmV0ZG5uaHdncXRlYWFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MDgxODAsImV4cCI6MjA1OTM4NDE4MH0.6REF6OnSmfL26hSn3zkEPXFSKGQkFqI7vsuM7YW2UKc",
+                "Content-Type": "application/json",
+                Prefer: "return=minimal",
+              },
+              body: JSON.stringify({
+                device_fingerprint: fingerprint,
+                // Optionally include invite_code or other metadata
+              }),
+            }
+          );
+        } catch (err) {
+          statusEl.innerText = "Failed to save invite. Please try again later.";
+          return;
+        }
+
+        statusEl.innerText = "Opening AI Daily Dose...";
+
+        // Redirect to your app
+        window.location.href = "aidailydose://";
+      }
+
+      handleInviteFlow();
+    </script>
+  </body>
+</html>
