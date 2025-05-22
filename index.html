@@ -18,8 +18,7 @@
       function isMobile() {
         return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       }
-
-      async function handleInviteFlow() {
+      async function recordInvite() {
         const statusEl = document.getElementById("status");
 
         // if (!isMobile()) {
@@ -32,6 +31,10 @@
 
         // Save to Supabase
         try {
+          const ipRes = await fetch("https://api64.ipify.org?format=json");
+          const ip = (await ipRes.json()).ip;
+          const ua = navigator.userAgent;
+
           const res = await fetch(
             "https://jdowwnetdnnhwgqteaak.supabase.co/functions/v1/recordInvite",
             {
@@ -41,30 +44,22 @@
                 Authorization:
                   "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impkb3d3bmV0ZG5uaHdncXRlYWFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MDgxODAsImV4cCI6MjA1OTM4NDE4MH0.6REF6OnSmfL26hSn3zkEPXFSKGQkFqI7vsuM7YW2UKc",
               },
+              body: JSON.stringify({ ip, userAgent: ua }),
             }
           );
 
-          const responseBody = await res.text(); // capture raw text to debug
-          if (!res.ok) {
-            throw new Error(`Supabase error ${res.status}: ${responseBody}`);
-          }
+          const json = await res.json();
+          if (!res.ok) throw new Error(json?.error || "Invite failed");
 
-          const { fingerprint } = JSON.parse(responseBody);
-          console.log("Fingerprint saved:", fingerprint);
+          statusEl.innerText = "Opening AI Daily Dose...";
+          console.log("Fingerprint:", json.fingerprint);
         } catch (err) {
-          statusEl.innerText = `Failed to save invite. Please try again later...${JSON.stringify(
-            err.error
-          )}...${JSON.stringify(err.message)}`;
-          return;
+          console.error("Error:", err);
+          statusEl.innerText = "Failed to save invite. Try again.";
         }
-
-        statusEl.innerText = "Opening AI Daily Dose...";
-
-        // Redirect to your app
-        window.location.href = "aidailydose://";
       }
 
-      handleInviteFlow();
+      recordInvite();
     </script>
   </body>
 </html>
