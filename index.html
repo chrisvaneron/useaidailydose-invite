@@ -51,7 +51,9 @@
 
           const { fingerprint } = await res.json();
         } catch (err) {
-          statusEl.innerText = "Failed to save invite. Please try again later.";
+          statusEl.innerText = `Failed to save invite. Please try again later...${JSON.stringify(
+            err
+          )}`;
           return;
         }
 
