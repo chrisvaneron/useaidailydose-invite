@@ -35,24 +35,21 @@
 
         // Save to Supabase
         try {
-          await fetch(
-            "https://jdowwnetdnnhwgqteaak.supabase.co/rest/v1/deferred_invites",
+          const res = await fetch(
+            "https://jdowwnetdnnhwgqteaak.supabase.co/functions/v1/record_invite",
             {
               method: "POST",
               headers: {
-                apikey:
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impkb3d3bmV0ZG5uaHdncXRlYWFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MDgxODAsImV4cCI6MjA1OTM4NDE4MH0.6REF6OnSmfL26hSn3zkEPXFSKGQkFqI7vsuM7YW2UKc",
+                "Content-Type": "application/json",
+                // apikey:
+                //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impkb3d3bmV0ZG5uaHdncXRlYWFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MDgxODAsImV4cCI6MjA1OTM4NDE4MH0.6REF6OnSmfL26hSn3zkEPXFSKGQkFqI7vsuM7YW2UKc",
                 Authorization:
                   "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impkb3d3bmV0ZG5uaHdncXRlYWFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MDgxODAsImV4cCI6MjA1OTM4NDE4MH0.6REF6OnSmfL26hSn3zkEPXFSKGQkFqI7vsuM7YW2UKc",
-                "Content-Type": "application/json",
-                Prefer: "return=minimal",
               },
-              body: JSON.stringify({
-                device_fingerprint: fingerprint,
-                // Optionally include invite_code or other metadata
-              }),
             }
           );
+
+          const { fingerprint } = await res.json();
         } catch (err) {
           statusEl.innerText = "Failed to save invite. Please try again later.";
           return;
