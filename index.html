@@ -30,8 +30,15 @@
           return;
         }
 
-        const fingerprint = crypto.randomUUID();
-        localStorage.setItem("aidailydose_fingerprint", fingerprint);
+        try {
+          const fingerprint = crypto.randomUUID();
+          localStorage.setItem("aidailydose_fingerprint", fingerprint);
+        } catch (err) {
+          statusEl.innerText = `Failed to generate fingerprint. Please try again later...${JSON.stringify(
+            err.error
+          )}...${JSON.stringify(err.message)}`;
+          return;
+        }
 
         // Save to Supabase
         try {
@@ -52,8 +59,8 @@
           const { fingerprint } = await res.json();
         } catch (err) {
           statusEl.innerText = `Failed to save invite. Please try again later...${JSON.stringify(
-            err.error || err.message
-          )}`;
+            err.error
+          )}...${JSON.stringify(err.message)}`;
           return;
         }
 
