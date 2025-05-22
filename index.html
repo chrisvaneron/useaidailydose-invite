@@ -49,9 +49,14 @@
           );
 
           const json = await res.json();
-          if (!res.ok) throw new Error(json?.error || "Invite failed");
+          if (!res.ok) {
+            statusEl.innerText = json?.error || "Invite failed";
+          } else {
+            statusEl.innerText = "Opening AI Daily Dose...";
 
-          statusEl.innerText = "Opening AI Daily Dose...";
+            // Redirect to AI Daily Dose app
+            window.location.href = "aidailydose://";
+          }
           console.log("Fingerprint:", json.fingerprint);
         } catch (err) {
           console.error("Error:", err);
