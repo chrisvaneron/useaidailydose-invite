@@ -2,69 +2,104 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Opening AI Daily Dose...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="AI Daily Dose delivers magical, personalized AI-generated images every morning. Just upload a photo, pick a style, and wake up to wonder."
+    />
+    <title>AI Daily Dose</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
       body {
-        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        height: 100%;
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #fdfbfb, #ebedee);
+        color: #1e1e1e;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #fdfbfb, #ebedee);
+        color: #1e1e1e;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 60px 20px;
         text-align: center;
-        padding: 2rem;
+      }
+
+      header {
+        max-width: 720px;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        font-weight: 800;
+      }
+
+      p {
+        font-size: 1.25rem;
+        line-height: 1.6;
+        margin-bottom: 40px;
+      }
+
+      .cta-button {
+        padding: 16px 32px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        background: #000;
+        border: none;
+        border-radius: 9999px;
+        text-decoration: none;
+        display: inline-block;
+        transition: background 0.3s ease;
+      }
+
+      .cta-button:hover {
+        background: #222;
+      }
+
+      .logo {
+        height: 64px;
+        margin-bottom: 32px;
+      }
+
+      footer {
+        margin-top: 60px;
+        font-size: 0.9rem;
+        color: #888;
       }
     </style>
   </head>
   <body>
-    <p id="status">Checking your device...</p>
+    <header>
+      <img
+        src="https://jdowwnetdnnhwgqteaak.supabase.co/storage/v1/object/public/branding//logo.png"
+        alt="AI Daily Dose Logo"
+        class="logo"
+      />
+      <h1>Wake up to something magical</h1>
+      <p>
+        AI Daily Dose delivers a brand new AI-generated image every morning —
+        personalized just for you. Pick a style. Upload a photo. Let the magic
+        begin.
+      </p>
+      <a class="cta-button" href="https://apps.apple.com/app/id1234567890"
+        >Download on the App Store</a
+      >
+    </header>
 
-    <script>
-      function isMobile() {
-        return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      }
-      async function recordInvite() {
-        const statusEl = document.getElementById("status");
-
-        if (!isMobile()) {
-          statusEl.innerHTML = `
-            <strong>Almost there!</strong><br /><br />
-            Please open this invite link from your phone or tablet to launch the AI Daily Dose app 🪄
-          `;
-          return;
-        }
-
-        // Save to Supabase
-        try {
-          const ipRes = await fetch("https://api64.ipify.org?format=json");
-          const ip = (await ipRes.json()).ip;
-          const ua = navigator.userAgent;
-
-          const res = await fetch(
-            "https://jdowwnetdnnhwgqteaak.supabase.co/functions/v1/recordInvite",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization:
-                  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impkb3d3bmV0ZG5uaHdncXRlYWFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MDgxODAsImV4cCI6MjA1OTM4NDE4MH0.6REF6OnSmfL26hSn3zkEPXFSKGQkFqI7vsuM7YW2UKc",
-              },
-              body: JSON.stringify({ ip, userAgent: ua }),
-            }
-          );
-
-          const json = await res.json();
-          if (!res.ok) {
-            statusEl.innerText = json?.error || "Invite failed";
-          } else {
-            statusEl.innerText = "Opening AI Daily Dose...";
-
-            // Redirect to AI Daily Dose app
-            window.location.href = "aidailydose://";
-          }
-          console.log("Fingerprint:", json.fingerprint);
-        } catch (err) {
-          console.error("Error:", err);
-          statusEl.innerText = "Failed to save invite. Try again.";
-        }
-      }
-
-      recordInvite();
-    </script>
+    <footer>&copy; 2025 AI Daily Dose. All rights reserved.</footer>
   </body>
 </html>
